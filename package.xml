@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ros2_grsim_protobuf</name>
+  <name>ros2_grsim</name>
   <version>0.0.0</version>
-  <description>protobuf for grSim</description>
+  <description>ros2 wrapper for grSim</description>
   <maintainer email="ibis.ssl.team@gmail.com">ibis ssl</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>protobuf-dev</depend>
-  <depend>Protobuf</depend>
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>ODE</depend>
+  <depend>Qt5 COMPONENTS Core Widgets OpenGL Network</depend>
+  <depend>OpenGL</depend>
+  <depend>VarTypes</depend>
+  <depend>ros2_grsim_protobuf</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
