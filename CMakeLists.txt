@@ -18,12 +18,34 @@ set(CMAKE_INCLUDE_CURRENT_DIR YES)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(builtin_interfaces REQUIRED)
+
 find_package(Protobuf REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(ODE REQUIRED)
 find_package(VarTypes REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets OpenGL Network REQUIRED)
+
+
+set(msg_files
+  "msg/FieldCircularArc.msg"
+  "msg/FieldLineSegment.msg"
+  "msg/VisionGeometry.msg"
+  "msg/DetectionBall.msg"
+  "msg/DetectionRobot.msg"
+  "msg/DetectionFrame.msg"
+  "msg/VisionDetections.msg"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
+  DEPENDENCIES builtin_interfaces std_msgs geometry_msgs
+)
+
+ament_export_dependencies(rosidl_default_runtime)
 
 set(libs)
 list(APPEND libs ode::ode)
