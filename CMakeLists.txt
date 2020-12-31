@@ -1,59 +1,37 @@
 cmake_minimum_required(VERSION 3.5)
 
-## Project branding, version and package mantainer
 project(ros2_grsim)
-set(VERSION "1.0.0a2")
-#set(VENDOR "Parsian")
-set(MAINTAINER "Mani Monajjemi <mani.monajjemi@gmail.com>")
 
-# some utils and helper vars
-string(TOLOWER ${CMAKE_PROJECT_NAME} CMAKE_PROJECT_NAME_LOWER)
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
-include(${PROJECT_SOURCE_DIR}/cmake/Utils.cmake)
-standard_config()
-standard_paths(${PROJECT_SOURCE_DIR} bin lib)
-
-set(app ${CMAKE_PROJECT_NAME})
-# create the target before the sources list is known so that we can call
-# add_dependencies(<target> external_proj)
-# add_executable(${PROJECT_NAME}_node "")
-
-# definitions for knowing the OS from the code
-add_definitions(-DHAVE_UNIX)
-#TODO: fix this, say we have FreeBSD, that's not linux
-add_definitions(-DHAVE_LINUX)
-
-# set explicitly the c++ standard to use
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
-## Handling depenendcies
+set(CMAKE_AUTOMOC YES)
+set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(Protobuf REQUIRED)
-
-
-# we will append all libs to this var
-set(libs)
-
 find_package(OpenGL REQUIRED)
 find_package(ODE REQUIRED)
-find_package(VarTypes)
+find_package(VarTypes REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets OpenGL Network REQUIRED)
 
-list(APPEND libs ${OPENGL_LIBRARIES})
+set(libs)
 list(APPEND libs ode::ode)
 list(APPEND libs Qt5::Core Qt5::Widgets Qt5::OpenGL Qt5::Network)
-list(APPEND libs ${VARTYPES_LIBRARIES})
-list(APPEND libs ${PROTOBUF_LIBRARIES})
+list(APPEND libs ${OPENGL_LIBRARIES} ${VARTYPES_LIBRARIES} ${PROTOBUF_LIBRARIES})
 
-include_directories(${OPENGL_INCLUDE_DIR})
-include_directories(${PROTOBUF_INCLUDE_DIRS})
-include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_SOURCE_DIR}/include/net)
-include_directories(${PROJECT_SOURCE_DIR}/include/physics)
+include_directories(${OPENGL_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIRS} ${VARTYPES_INCLUDE_DIRS})
+include_directories(include include/net include/physics)
 
 protobuf_generate_cpp(PROTO_CPP PROTO_H
     src/proto/messages_robocup_ssl_detection.proto
@@ -124,12 +102,9 @@ set(HEADERS
     include/config.h
 )
 
-# files to be compiled
 set(srcs
-    ${CONFIG_FILES}
     ${PROTO_CPP}
     ${PROTO_H}
-    ${RESOURCES}
     ${HEADERS}
     ${SOURCES}
 )
@@ -138,8 +113,7 @@ file(GLOB CONFIG_FILES "config/*.ini")
 set_source_files_properties(${CONFIG_FILES}  PROPERTIES MACOSX_PACKAGE_LOCATION "config")
 
 add_executable(${PROJECT_NAME}_node ${srcs})
-target_include_directories(${PROJECT_NAME}_node PRIVATE ${VARTYPES_INCLUDE_DIRS})
-# target_sources(${app} PRIVATE ${srcs})
+
 install(
   DIRECTORY include/
   DESTINATION include)
@@ -150,17 +124,11 @@ install(TARGETS ${PROJECT_NAME}_node
 
 target_link_libraries(${PROJECT_NAME}_node ${libs})
 
-install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
-install(FILES resources/grsim.desktop DESTINATION share/applications)
-install(FILES resources/icons/grsim.svg DESTINATION share/icons/hicolor/scalable/apps)
-
-option(BUILD_CLIENTS "Choose this option if you want to build the example Qt client." ON)
-if(BUILD_CLIENTS)
-    add_subdirectory(clients/qt)
-endif()
-
-file(COPY README.md LICENSE.md DESTINATION ${CMAKE_BINARY_DIR})
-file(RENAME ${CMAKE_BINARY_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt)
-file(RENAME ${CMAKE_BINARY_DIR}/LICENSE.md ${CMAKE_BINARY_DIR}/LICENSE.txt)
+install(DIRECTORY   config 
+        DESTINATION share/${PROJECT_NAME})
+install(FILES       resources/grsim.desktop 
+        DESTINATION share/applications)
+install(FILES       resources/icons/grsim.svg 
+        DESTINATION share/icons/hicolor/scalable/apps)
 
 ament_package()
