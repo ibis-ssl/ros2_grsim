@@ -1,0 +1,68 @@
+cmake_minimum_required(VERSION 3.5)
+project(ros2_grsim_server)
+
+find_package(ament_cmake_auto REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets OpenGL Network REQUIRED)
+ament_auto_find_build_dependencies()
+
+set(SOURCES
+    src/main.cpp
+    src/mainwindow.cpp
+    src/glwidget.cpp
+    src/graphics.cpp
+    src/physics/pworld.cpp
+    src/physics/pobject.cpp
+    src/physics/pball.cpp
+    src/physics/pground.cpp
+    src/physics/pfixedbox.cpp
+    src/physics/pcylinder.cpp
+    src/physics/pbox.cpp
+    src/physics/pray.cpp
+    src/net/robocup_ssl_server.cpp
+    src/net/robocup_ssl_client.cpp
+    src/sslworld.cpp
+    src/robot.cpp
+    src/configwidget.cpp
+    src/statuswidget.cpp
+    src/logger.cpp
+    src/robotwidget.cpp
+    src/getpositionwidget.cpp
+)
+
+set(HEADERS
+    include/mainwindow.h
+    include/glwidget.h
+    include/graphics.h
+    include/physics/pworld.h
+    include/physics/pobject.h
+    include/physics/pball.h
+    include/physics/pground.h
+    include/physics/pfixedbox.h
+    include/physics/pcylinder.h
+    include/physics/pbox.h
+    include/physics/pray.h
+    include/net/robocup_ssl_server.h
+    include/net/robocup_ssl_client.h
+    include/sslworld.h
+    include/robot.h
+    include/configwidget.h
+    include/statuswidget.h
+    include/logger.h
+    include/robotwidget.h
+    include/getpositionwidget.h
+    include/common.h
+    include/config.h
+)
+
+include_directories(include/physics include/net ${ros2_grsim_protobuf_INCLUDE_DIRS})
+
+ament_auto_add_library(${PROJECT_NAME} SHARED
+ ${SOURCES} ${HEADERS})
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::OpenGL Qt5::Network)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_auto_package()
