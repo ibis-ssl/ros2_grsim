@@ -7,3 +7,5 @@ bin*/*
 Thumbs.db
 .idea/*
 cmake-build-debug/*
+
+.vscode/
