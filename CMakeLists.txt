@@ -136,6 +136,13 @@ set_source_files_properties(${CONFIG_FILES}  PROPERTIES MACOSX_PACKAGE_LOCATION 
 
 add_executable(${PROJECT_NAME}_node ${srcs})
 
+ament_target_dependencies(
+  ${PROJECT_NAME}_node
+  "rclcpp"
+  "std_msgs"
+  "geometry_msgs"
+)
+
 install(
   DIRECTORY include/
   DESTINATION include)
