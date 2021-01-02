@@ -65,7 +65,6 @@ private:
     char *in_buffer;
     bool lastInfraredState[TEAM_COUNT][MAX_ROBOT_COUNT];
     KickStatus lastKickState[TEAM_COUNT][MAX_ROBOT_COUNT];
-    bool has_initilized = false;
 public:    
     dReal customDT;
     bool isGLEnabled;
@@ -96,7 +95,6 @@ public:
     dReal cursor_x,cursor_y,cursor_z;
     dReal cursor_radius;
     RoboCupSSLServer *visionServer;
-    std::shared_ptr<RoboCupSSLServerComponent> visionServerROS;
     rclcpp::executors::SingleThreadedExecutor * exec;
     QUdpSocket *commandSocket;
     QUdpSocket *blueStatusSocket,*yellowStatusSocket;

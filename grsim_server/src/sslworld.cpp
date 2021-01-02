@@ -317,9 +317,8 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
 
     rclcpp::init(argc,argv);
     exec = new rclcpp::executors::SingleThreadedExecutor();
-    this->visionServerROS = std::make_shared<RoboCupSSLServerComponent>(rclcpp::NodeOptions());
-    exec->add_node(this->visionServerROS);
-    has_initilized = true;
+    auto node = std::make_shared<RoboCupSSLServerComponent>(rclcpp::NodeOptions());
+    exec->add_node(node);
 }
 
 int SSLWorld::robotIndex(int robot,int team)

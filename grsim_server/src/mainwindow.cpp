@@ -50,7 +50,7 @@ void MainWindow::customFPS(int fps)
     logStatus(QString("new FPS set by user: %1").arg(fps),"red");
 }
 
-MainWindow::MainWindow(int argc,char **argv, QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     QDir dir = qApp->applicationDirPath();
@@ -74,7 +74,6 @@ MainWindow::MainWindow(int argc,char **argv, QWidget *parent)
     glwidget->resize(512,512);    
 
     visionServer = NULL;
-//    visionServerROS = NULL;
     commandSocket = NULL;
     blueStatusSocket = NULL;
     yellowStatusSocket = NULL;
@@ -84,7 +83,6 @@ MainWindow::MainWindow(int argc,char **argv, QWidget *parent)
     reconnectYellowStatusSocket();
 
     glwidget->ssl->visionServer = visionServer;
-//    glwidget->ssl->visionServerROS = visionServerROS;
     glwidget->ssl->commandSocket = commandSocket;
     glwidget->ssl->blueStatusSocket = blueStatusSocket;
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
@@ -422,7 +420,6 @@ void MainWindow::restartSimulator()
     glwidget->ssl = new SSLWorld(glwidget,glwidget->cfg,glwidget->forms[2],glwidget->forms[2]);
     glwidget->ssl->glinit();
     glwidget->ssl->visionServer = visionServer;
-//    glwidget->ssl->visionServerROS = visionServerROS;
     glwidget->ssl->commandSocket = commandSocket;
     glwidget->ssl->blueStatusSocket = blueStatusSocket;
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
@@ -542,7 +539,6 @@ void MainWindow::reconnectVisionSocket()
     if (visionServer == NULL) {
         visionServer = new RoboCupSSLServer(this);
     }
-    
     visionServer->change_address(configwidget->VisionMulticastAddr());
     visionServer->change_port(configwidget->VisionMulticastPort());
     logStatus(QString("Vision server connected on: %1").arg(configwidget->VisionMulticastPort()),QColor("green"));

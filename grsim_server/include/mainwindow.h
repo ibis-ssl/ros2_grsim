@@ -85,7 +85,6 @@ private:
     QString current_dir;
 
     RoboCupSSLServer *visionServer;
-//    std::shared_ptr<RoboCupSSLServerComponent> visionServerROS;
     QUdpSocket *commandSocket;
     QUdpSocket *blueStatusSocket,*yellowStatusSocket;
 };
