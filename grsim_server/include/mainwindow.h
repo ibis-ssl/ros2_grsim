@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(int argc,char **argv, QWidget *parent = 0);
+    MainWindow(QWidget *parent = 0);
     ~MainWindow();    
 public slots:
     void update();

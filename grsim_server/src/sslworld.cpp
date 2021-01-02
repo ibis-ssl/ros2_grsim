@@ -16,6 +16,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <unistd.h>
+
 #include "sslworld.h"
 
 #include <QtGlobal>
@@ -312,13 +314,15 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
         }
     }
     int argc = 1;
-//    char * argv[1] = { "/home/hans/ros_ws/ibis_ws/install/grsim_server/lib/grsim_server/grsim_server_node" };
-    char * argv[1] = { "/home/hans/ros_ws/ibis_ws/src/ros2_grsim/grsim_server/cmake-build-debug/grsim_server_node" };
+    char buf[1024];
+    readlink( "/proc/self/exe", buf, sizeof(buf)-1 );
+    char * argv[1];
+    argv[0] = buf;
 
     rclcpp::init(argc,argv);
     exec = new rclcpp::executors::SingleThreadedExecutor();
-    auto node = std::make_shared<RoboCupSSLServerComponent>(rclcpp::NodeOptions());
-    exec->add_node(node);
+    visionServerROS = std::make_shared<RoboCupSSLServerComponent>(rclcpp::NodeOptions());
+    exec->add_node(visionServerROS);
 }
 
 int SSLWorld::robotIndex(int robot,int team)
@@ -909,6 +913,7 @@ void SSLWorld::sendVisionBuffer()
         delete sendQueue.front();
         sendQueue.pop_front();
         visionServer->send(*packet);
+
         if (visionServerROS){
             visionServerROS->send(*packet);
         }

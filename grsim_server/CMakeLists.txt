@@ -69,7 +69,6 @@ set(SOURCES
     src/physics/pray.cpp
     src/net/robocup_ssl_server.cpp
     src/net/robocup_ssl_client.cpp
-    src/ros/robocup_ssl_server_component.cpp
     src/sslworld.cpp
     src/robot.cpp
     src/configwidget.cpp

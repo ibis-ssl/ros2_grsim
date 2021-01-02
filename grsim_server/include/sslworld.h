@@ -95,6 +95,7 @@ public:
     dReal cursor_x,cursor_y,cursor_z;
     dReal cursor_radius;
     RoboCupSSLServer *visionServer;
+    std::shared_ptr<RoboCupSSLServerComponent> visionServerROS;
     rclcpp::executors::SingleThreadedExecutor * exec;
     QUdpSocket *commandSocket;
     QUdpSocket *blueStatusSocket,*yellowStatusSocket;
