@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(int argc,char **argv, QWidget *parent = 0);
     ~MainWindow();    
 public slots:
     void update();
@@ -85,6 +85,7 @@ private:
     QString current_dir;
 
     RoboCupSSLServer *visionServer;
+//    std::shared_ptr<RoboCupSSLServerComponent> visionServerROS;
     QUdpSocket *commandSocket;
     QUdpSocket *blueStatusSocket,*yellowStatusSocket;
 };

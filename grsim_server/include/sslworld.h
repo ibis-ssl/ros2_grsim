@@ -34,6 +34,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "physics/pray.h"
 
 #include "net/robocup_ssl_server.h"
+#include "ros/robocup_ssl_server_component.h"
 
 #include "robot.h"
 #include "configwidget.h"
@@ -63,7 +64,8 @@ private:
     char packet[200];
     char *in_buffer;
     bool lastInfraredState[TEAM_COUNT][MAX_ROBOT_COUNT];
-    KickStatus lastKickState[TEAM_COUNT][MAX_ROBOT_COUNT];    
+    KickStatus lastKickState[TEAM_COUNT][MAX_ROBOT_COUNT];
+    bool has_initilized = false;
 public:    
     dReal customDT;
     bool isGLEnabled;
@@ -94,6 +96,8 @@ public:
     dReal cursor_x,cursor_y,cursor_z;
     dReal cursor_radius;
     RoboCupSSLServer *visionServer;
+    std::shared_ptr<RoboCupSSLServerComponent> visionServerROS;
+    rclcpp::executors::SingleThreadedExecutor * exec;
     QUdpSocket *commandSocket;
     QUdpSocket *blueStatusSocket,*yellowStatusSocket;
     bool updatedCursor;

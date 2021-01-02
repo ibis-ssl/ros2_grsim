@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(ros2_grsim)
+project(grsim_server)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -17,10 +17,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(builtin_interfaces REQUIRED)
+find_package(grsim_msgs REQUIRED)
 
 find_package(Protobuf REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -29,31 +26,13 @@ find_package(VarTypes REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets OpenGL Network REQUIRED)
 
-
-set(msg_files
-  "msg/FieldCircularArc.msg"
-  "msg/FieldLineSegment.msg"
-  "msg/VisionGeometry.msg"
-  "msg/DetectionBall.msg"
-  "msg/DetectionRobot.msg"
-  "msg/DetectionFrame.msg"
-  "msg/VisionDetections.msg"
-)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  ${msg_files}
-  DEPENDENCIES builtin_interfaces std_msgs geometry_msgs
-)
-
-ament_export_dependencies(rosidl_default_runtime)
-
 set(libs)
 list(APPEND libs ode::ode)
 list(APPEND libs Qt5::Core Qt5::Widgets Qt5::OpenGL Qt5::Network)
 list(APPEND libs ${OPENGL_LIBRARIES} ${VARTYPES_LIBRARIES} ${PROTOBUF_LIBRARIES})
 
 include_directories(${OPENGL_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIRS} ${VARTYPES_INCLUDE_DIRS})
-include_directories(include include/net include/physics)
+include_directories(include include/net include/physics include/ros)
 
 protobuf_generate_cpp(PROTO_CPP PROTO_H
     src/proto/messages_robocup_ssl_detection.proto
@@ -90,6 +69,7 @@ set(SOURCES
     src/physics/pray.cpp
     src/net/robocup_ssl_server.cpp
     src/net/robocup_ssl_client.cpp
+    src/ros/robocup_ssl_server_component.cpp
     src/sslworld.cpp
     src/robot.cpp
     src/configwidget.cpp
@@ -113,6 +93,7 @@ set(HEADERS
     include/physics/pray.h
     include/net/robocup_ssl_server.h
     include/net/robocup_ssl_client.h
+    include/ros/robocup_ssl_server_component.h
     include/sslworld.h
     include/robot.h
     include/configwidget.h
@@ -139,8 +120,7 @@ add_executable(${PROJECT_NAME}_node ${srcs})
 ament_target_dependencies(
   ${PROJECT_NAME}_node
   "rclcpp"
-  "std_msgs"
-  "geometry_msgs"
+  "grsim_msgs"
 )
 
 install(
@@ -153,8 +133,8 @@ install(TARGETS ${PROJECT_NAME}_node
 
 target_link_libraries(${PROJECT_NAME}_node ${libs})
 
-install(DIRECTORY   config 
-        DESTINATION share/${PROJECT_NAME})
+# install(DIRECTORY   config 
+#         DESTINATION share/${PROJECT_NAME})
 install(FILES       resources/grsim.desktop 
         DESTINATION share/applications)
 install(FILES       resources/icons/grsim.svg 

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("parsian-robotics.com");
     QCoreApplication::setApplicationName("grSim");
     QApplication a(argc, argv);
-    MainWindow w;
+    MainWindow w(argc,argv);
 
     if (std::find(argv, argend, std::string("--headless")) != argend
         || std::find(argv, argend, std::string("-H")) != argend) {
