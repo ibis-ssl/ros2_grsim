@@ -53,10 +53,6 @@ void MainWindow::customFPS(int fps)
 MainWindow::MainWindow(int argc,char **argv, QWidget *parent)
     : QMainWindow(parent)
 {
-    std::cout << argc << std::endl;
-    for (int i = 0; i < argc; ++i) {
-        std::cout << argv[i] << std::endl;
-    }
     QDir dir = qApp->applicationDirPath();
     dir.cdUp();
     current_dir = dir.path();

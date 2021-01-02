@@ -89,7 +89,6 @@ public:
             rclcpp::Clock ros_clock(RCL_ROS_TIME);
             vision_detections.header.stamp = ros_clock.now();
             vision_detections.frames.emplace_back(detection);
-            std::cout << "aaa" << std::endl;
             pub_detection->publish(vision_detections);
         }
         if (packet.has_geometry()) {

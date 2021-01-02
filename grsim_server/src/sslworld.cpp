@@ -319,7 +319,6 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
     exec = new rclcpp::executors::SingleThreadedExecutor();
     this->visionServerROS = std::make_shared<RoboCupSSLServerComponent>(rclcpp::NodeOptions());
     exec->add_node(this->visionServerROS);
-    std::cout << "start" << std::endl;
     has_initilized = true;
 }
 
