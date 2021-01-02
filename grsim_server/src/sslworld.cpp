@@ -16,6 +16,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <unistd.h>
+
 #include "sslworld.h"
 
 #include <QtGlobal>
@@ -311,6 +313,16 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
             lastKickState[team][i] = NO_KICK; 
         }
     }
+    int argc = 1;
+    char buf[1024];
+    readlink( "/proc/self/exe", buf, sizeof(buf)-1 );
+    char * argv[1];
+    argv[0] = buf;
+
+    rclcpp::init(argc,argv);
+    exec = new rclcpp::executors::SingleThreadedExecutor();
+    visionServerROS = std::make_shared<RoboCupSSLServerComponent>(rclcpp::NodeOptions());
+    exec->add_node(visionServerROS);
 }
 
 int SSLWorld::robotIndex(int robot,int team)
@@ -323,6 +335,7 @@ SSLWorld::~SSLWorld()
 {
     delete g;
     delete p;
+    rclcpp::shutdown();
 }
 
 QImage* createBlob(char yb,int i,QImage** res)
@@ -486,9 +499,11 @@ void SSLWorld::step(dReal dt)
 
     g->finalizeScene();
 
-
     sendVisionBuffer();
     framenum ++;
+
+    using namespace std::literals::chrono_literals;
+    exec->spin_once(1ms);
 }
 
 void SSLWorld::addRobotStatus(Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus)
@@ -898,6 +913,11 @@ void SSLWorld::sendVisionBuffer()
         delete sendQueue.front();
         sendQueue.pop_front();
         visionServer->send(*packet);
+
+        if (visionServerROS){
+            visionServerROS->send(*packet);
+        }
+
         delete packet;
         if (sendQueue.isEmpty()) break;
     }

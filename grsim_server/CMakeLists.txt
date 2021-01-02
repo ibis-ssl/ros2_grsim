@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(ros2_grsim)
+project(grsim_server)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -17,7 +17,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(grsim_msgs REQUIRED)
+
 find_package(Protobuf REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(ODE REQUIRED)
@@ -31,7 +32,7 @@ list(APPEND libs Qt5::Core Qt5::Widgets Qt5::OpenGL Qt5::Network)
 list(APPEND libs ${OPENGL_LIBRARIES} ${VARTYPES_LIBRARIES} ${PROTOBUF_LIBRARIES})
 
 include_directories(${OPENGL_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIRS} ${VARTYPES_INCLUDE_DIRS})
-include_directories(include include/net include/physics)
+include_directories(include include/net include/physics include/ros)
 
 protobuf_generate_cpp(PROTO_CPP PROTO_H
     src/proto/messages_robocup_ssl_detection.proto
@@ -91,6 +92,7 @@ set(HEADERS
     include/physics/pray.h
     include/net/robocup_ssl_server.h
     include/net/robocup_ssl_client.h
+    include/ros/robocup_ssl_server_component.h
     include/sslworld.h
     include/robot.h
     include/configwidget.h
@@ -114,6 +116,12 @@ set_source_files_properties(${CONFIG_FILES}  PROPERTIES MACOSX_PACKAGE_LOCATION 
 
 add_executable(${PROJECT_NAME}_node ${srcs})
 
+ament_target_dependencies(
+  ${PROJECT_NAME}_node
+  "rclcpp"
+  "grsim_msgs"
+)
+
 install(
   DIRECTORY include/
   DESTINATION include)
@@ -124,8 +132,8 @@ install(TARGETS ${PROJECT_NAME}_node
 
 target_link_libraries(${PROJECT_NAME}_node ${libs})
 
-install(DIRECTORY   config 
-        DESTINATION share/${PROJECT_NAME})
+# install(DIRECTORY   config 
+#         DESTINATION share/${PROJECT_NAME})
 install(FILES       resources/grsim.desktop 
         DESTINATION share/applications)
 install(FILES       resources/icons/grsim.svg 

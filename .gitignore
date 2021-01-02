@@ -9,3 +9,9 @@ Thumbs.db
 cmake-build-debug/*
 
 .vscode/
+
+grsim_server/cmake-build-debug/
+
+grsim_server/.idea/
+
+grsim_server/include/bin/
