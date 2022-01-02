@@ -109,6 +109,7 @@ set(srcs
     ${PROTO_H}
     ${HEADERS}
     ${SOURCES}
+    ${RESOURCES}
 )
 
 file(GLOB CONFIG_FILES "config/*.ini")
@@ -132,9 +133,10 @@ install(TARGETS ${PROJECT_NAME}_node
 
 target_link_libraries(${PROJECT_NAME}_node ${libs})
 
-# install(DIRECTORY   config 
-#         DESTINATION share/${PROJECT_NAME})
-install(FILES       resources/grsim.desktop 
+install(DIRECTORY   include/config
+         DESTINATION share/${PROJECT_NAME})
+
+install(FILES       resources/grsim.desktop
         DESTINATION share/applications)
 install(FILES       resources/icons/grsim.svg 
         DESTINATION share/icons/hicolor/scalable/apps)
